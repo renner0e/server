@@ -12,9 +12,11 @@ dnf install -y \
   git \
   tmux \
   vim \
-  just
+  just \
+  buildah
 
 systemctl enable podman.socket
 
 dnf config-manager setopt keepcache=0
+
 
