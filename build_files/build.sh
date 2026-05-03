@@ -7,6 +7,7 @@ dnf install -y \
   git \
   tmux \
   vim \
+  just
 
 systemctl enable podman.socket
 
