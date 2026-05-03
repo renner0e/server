@@ -1,0 +1,11 @@
+[Build]
+Arch=amd64
+ImageTag=localhost/bootc-image-factory:latest
+Pull=newer
+SetWorkingDirectory=/etc/bootc-image-factory/server
+PodmanArgs=--squash
+
+[Service]
+ExecStartPost=/usr/bin/bootc switch --quiet --transport=containers-storage localhost/bootc-image-factory:latest
+ExecStartPost=/usr/bin/bootc update --quiet
+Nice=0
