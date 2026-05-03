@@ -3,7 +3,10 @@
 set -ouex pipefail
 dnf config-manager setopt keepcache=1
 
-dnf install -y tmux 
+dnf install -y \
+  git \
+  tmux \
+  vim \
 
 systemctl enable podman.socket
 
