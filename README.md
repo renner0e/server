@@ -7,3 +7,7 @@ Heavily Inspired by:
 Docs: https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html
 
 I am using this for my server which just runs a bunch of containers and I got tired of debian flakiness.
+
+How to build and update locally?
+
+`sudo systemctl start bootc-image-factory-build.service`
