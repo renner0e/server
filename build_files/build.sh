@@ -18,5 +18,7 @@ dnf install -y \
   buildah
 
 systemctl enable podman.socket
+systemctl enable bootc-image-factory-build.timer
+systemctl enable wol@enp37s0.service
 
 dnf config-manager setopt keepcache=0
