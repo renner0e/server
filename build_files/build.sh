@@ -17,6 +17,12 @@ dnf install -y \
   just \
   buildah
 
+dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
+dnf config-manager setopt tailscale-stable.enabled=0
+dnf -y install --enablerepo='tailscale-stable' tailscale
+
 systemctl enable podman.socket
+systemctl --global enable podman-auto-update.timer
+systemctl enable tailscaled.service
 
 dnf config-manager setopt keepcache=0
