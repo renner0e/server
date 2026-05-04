@@ -1,4 +1,4 @@
-export image_name := env("IMAGE_NAME", "bootc-image-factory") # output image name, usually same as repo name, change as needed
+export image_name := env("IMAGE_NAME", "bootc-image-factory")
 export default_tag := env("DEFAULT_TAG", "latest")
 export bib_image := env("BIB_IMAGE", "quay.io/centos-bootc/bootc-image-builder:latest")
 
@@ -89,6 +89,8 @@ sudoif command *args:
 build $target_image=image_name $tag=default_tag:
     #!/usr/bin/env bash
 
+    set -xeuo pipefail
+
     BUILD_ARGS=()
     if [[ -z "$(git status -s)" ]]; then
         BUILD_ARGS+=("--build-arg" "SHA_HEAD_SHORT=$(git rev-parse --short HEAD)")
@@ -98,7 +100,24 @@ build $target_image=image_name $tag=default_tag:
         "${BUILD_ARGS[@]}" \
         --pull=newer \
         --tag "${target_image}:${tag}" \
+        --target raw \
         .
+
+# Build the image using the specified parameters
+rechunk $target_image=image_name $tag=default_tag:
+    #!/usr/bin/env bash
+
+    set -xeuo pipefail
+
+    export CHUNKAH_CONFIG_STR=$(podman inspect localhost/$target_image)
+    podman run --rm --mount=type=image,src=$target_image,dest=/chunkah \
+    -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah:latest \
+    build \
+    --prune /sysroot/ \
+    --prune /ostree \
+    --max-layers 128 \
+    --label ostree.commit- --label ostree.final-diffid- \
+    --tag "${target_image}:${tag}"-chunked | podman load
 
 # Command: _rootful_load_image
 # Description: This script checks if the current user is root or running under sudo. If not, it attempts to resolve the image tag using podman inspect.
@@ -292,7 +311,6 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.{{ type }}
-
 
 # Runs shell check on all Bash scripts
 lint:
