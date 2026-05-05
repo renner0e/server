@@ -11,3 +11,5 @@ I am using this for my server which just runs a bunch of containers and I got ti
 How to build and update locally?
 
 `sudo systemctl start --verbose bootc-image-factory-build.service`
+
+`sudo systemctl enable bootc-image-factory-build.timer`
