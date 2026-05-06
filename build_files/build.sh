@@ -11,11 +11,12 @@ dnf -y install dnf5-plugins
 dnf config-manager setopt keepcache=1
 
 dnf install -y \
+  borg \
+  buildah \
   git \
-  tmux \
-  vim \
   just \
-  buildah
+  tmux \
+  vim
 
 dnf config-manager addrepo --from-repofile=https://pkgs.tailscale.com/stable/fedora/tailscale.repo
 dnf config-manager setopt tailscale-stable.enabled=0
