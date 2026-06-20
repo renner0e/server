@@ -7,7 +7,7 @@ ConditionPathExists=/usr/bin/bootc
 [Service]
 Type=oneshot
 # You can use image-template.env from the image-template for this!
-WorkingDirectory=$IMAGE_TEMPLATE_DIR
+WorkingDirectory=-/var/home/myuser/Projects/image-template
 EnvironmentFile=-/var/home/myuser/Projects/image-template
 # Actually do the build
 ExecStart=/usr/bin/just build
