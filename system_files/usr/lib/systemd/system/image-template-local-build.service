@@ -8,11 +8,8 @@ ConditionPathExists=/usr/bin/bootc
 Type=oneshot
 # You can use image-template.env from the image-template for this!
 WorkingDirectory=-/var/home/myuser/Projects/image-template
-EnvironmentFile=-/var/home/myuser/Projects/image-template
 # Actually do the build
 ExecStart=/usr/bin/just build
-# Switch to the image if we haven't already, this pretty much only has to run once
-ExecStart=-/usr/bin/bootc switch --quiet --transport=containers-storage localhost/$IMAGE_NAME
 # Actually stage the update
 ExecStartPost=/usr/bin/bootc update --quiet
 # Cleanup after ourselves because things will get messy after a while, clean anything older than 7d
