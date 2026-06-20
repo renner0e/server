@@ -1,0 +1,20 @@
+[Unit]
+Description=Build a bootc image locally and switch to it
+Documentation=man:bootc(8) man:just(1) man:podman(1) man:buildah(1)
+ConditionPathExists=/run/ostree-booted
+ConditionPathExists=/usr/bin/bootc
+
+[Service]
+Type=oneshot
+# You can use image-template.env from the image-template for this!
+WorkingDirectory=$IMAGE_TEMPLATE_DIR
+EnvironmentFile=-/var/home/myuser/Projects/image-template
+# Actually do the build
+ExecStart=/usr/bin/just build
+# Switch to the image if we haven't already, this pretty much only has to run once
+ExecStart=-/usr/bin/bootc switch --quiet --transport=containers-storage localhost/$IMAGE_NAME
+# Actually stage the update
+ExecStartPost=/usr/bin/bootc update --quiet
+# Cleanup after ourselves because things will get messy after a while, clean anything older than 7d
+ExecStartPost=/usr/bin/podman image prune --force --filter=label=containers.bootc=1 --filter until=168h
+Nice=0
